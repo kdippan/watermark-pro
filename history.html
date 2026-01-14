@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History Log | Watermark Pro</title>
+    
+    <meta name="description" content="View your recent watermarking activity log. Track batch processes and single image exports locally.">
+    <meta name="author" content="Dippan Bhusal">
+    <meta name="robots" content="noindex, nofollow"> <meta property="og:title" content="Watermark Pro History">
+    <meta property="og:description" content="Your local activity log for Watermark Pro.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://watermark.dippanbhusal.tech/history.html">
+    <meta property="og:image" content="https://watermark.dippanbhusal.tech/ogg-watermarkpro.png">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display&family=Roboto&family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .history-layout { max-width: 1200px; margin: 0 auto; padding: 100px 20px 40px; min-height: 80vh; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        
+        .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        
+        /* History Card Design */
+        .h-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .h-card:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        
+        .h-card-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: var(--bg-main); }
+        .h-icon { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+        
+        .h-card-body { padding: 15px; }
+        .h-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .h-title { font-weight: 600; margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+        
+        .h-actions { padding: 12px 15px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; background: rgba(0,0,0,0.02); }
+        
+        .empty-history { grid-column: 1/-1; text-align: center; padding: 80px 20px; color: var(--text-muted); }
+        .empty-history i { font-size: 4rem; margin-bottom: 20px; opacity: 0.3; }
+
+        /* Navbar Override for History Page */
+        .landing-nav {
+            position: fixed; top: 0; left: 0; right: 0; height: 70px;
+            background: var(--bg-panel); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+        }
+        .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; color: var(--text); }
+        .nav-brand img { height: 32px; width: auto; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar landing-nav">
+        <div class="nav-brand">
+            <img src="https://watermark.dippanbhusal.tech/logo-watermarkpro.png" alt="Watermark Pro">
+            <span>Watermark Pro</span>
+        </div>
+        <div class="nav-links mobile-hidden">
+            <a href="index.html">Home</a>
+            <a href="editor.html">Open Editor</a>
+            <a href="history.html" class="active">History</a>
+        </div>
+        <div class="nav-actions">
+            <a href="editor.html" class="btn btn-primary"><i class="fa-solid fa-plus"></i> New Project</a>
+            <button id="themeToggle" class="icon-btn"><i class="fa-solid fa-moon"></i></button>
+        </div>
+    </nav>
+
+    <main class="history-layout">
+        <div class="history-header">
+            <div>
+                <h1>Activity Log</h1>
+                <p style="color: var(--text-muted);">A local record of your recent exports.</p>
+            </div>
+            <button onclick="clearHistory()" class="btn btn-secondary">
+                <i class="fa-solid fa-trash"></i> Clear Log
+            </button>
+        </div>
+
+        <div id="historyGrid" class="history-grid">
+            <div class="empty-state">Loading...</div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-grid container">
+            <div class="footer-brand">
+                <h3>Watermark Pro</h3>
+                <p>Built with ❤️ by <strong>Dippan Bhusal</strong>.</p>
+                <p>Open Source and free for everyone.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <a href="editor.html">Editor</a>
+                <a href="history.html">History Log</a>
+            </div>
+            <div class="footer-social">
+                <h4>Connect with Dippan</h4>
+                <div class="social-icons">
+                    <a href="https://github.com/Kdippan" target="_blank"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://linkedin.com/in/Kdippan" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://www.npmjs.com/~kdippan" target="_blank"><i class="fa-brands fa-npm"></i></a>
+                    <a href="https://instagram.com/dippan.bhusal" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://x.com/dippanbhusal" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="https://facebook.com/dippan.bhusall" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Dippan Bhusal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Theme Logic
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+        }
+        loadTheme();
+
+        themeToggle.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        });
+
+        // 2. History Render Logic
+        function renderHistory() {
+            const grid = document.getElementById('historyGrid');
+            const history = JSON.parse(localStorage.getItem('wmHistory') || '[]');
+            
+            if(history.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-history">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <h3>No history yet</h3>
+                        <p>Export images in the Editor to see them listed here.</p>
+                        <a href="editor.html" class="btn btn-primary" style="margin-top:20px;">Go to Editor</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Map history items to HTML cards
+            grid.innerHTML = history.map(item => `
+                <div class="h-card">
+                    <div class="h-card-header">
+                        <div class="h-icon">
+                            <i class="fa-solid ${item.type === 'batch' ? 'fa-layer-group' : 'fa-image'}"></i>
+                        </div>
+                        <span style="font-size:0.85rem; font-weight:600; color:var(--text);">
+                            ${item.type === 'batch' ? 'Batch Process' : 'Single Export'}
+                        </span>
+                    </div>
+                    <div class="h-card-body">
+                        <div class="h-title" title="${item.fileName}">${item.fileName}</div>
+                        <div class="h-meta">
+                            <i class="fa-regular fa-clock"></i> 
+                            ${new Date(item.date).toLocaleString()}
+                        </div>
+                        <div class="h-meta">
+                            <i class="fa-solid fa-file-export"></i> 
+                            ${item.format.toUpperCase().replace('IMAGE/', '')} • Quality: ${Math.round(item.quality * 100)}%
+                        </div>
+                    </div>
+                    <div class="h-actions">
+                        <span style="font-size:0.8rem; color:var(--text-muted); font-weight:500;">
+                            <i class="fa-solid fa-layer-group"></i> ${item.watermarkCount} Layer(s) Used
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 3. Clear History Logic
+        function clearHistory() {
+            if(confirm("Are you sure you want to clear your entire activity log? This cannot be undone.")) {
+                localStorage.removeItem('wmHistory');
+                renderHistory();
+            }
+        }
+
+        // Initialize
+        renderHistory();
+    </script>
+</body>
+</html>
